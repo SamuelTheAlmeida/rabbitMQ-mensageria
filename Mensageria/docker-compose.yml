@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+    helloworld:
+        container_name: instance1
+        image: mensageria
+        build:
+            context: .
+        restart: always
+        ports:
+            - "7000:80"
+        networks:
+            - helloworld-network
+        depends_on:
+            - "rabbitmq"
+        links:
+             - rabbitmq
+
+    helloworld2:
+        container_name: instance2
+        image: mensageria
+        build:
+            context: .
+        restart: always
+        ports:
+            - "8000:80"
+        networks:
+            - helloworld-network
+        depends_on:
+            - "rabbitmq"
+        links:
+             - rabbitmq
+
+    rabbitmq:
+        container_name: rabbitmq
+        hostname: rabbitmq
+        image: rabbitmq:3-management
+        volumes:
+            - ./.docker/rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.config:ro
+            - ./.docker/rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json:ro
+        ports:
+          - 32770:4369
+          - 5671:5671
+          - 5672:5672
+          - 32769:15671
+          - 15672:15672
+          - 32768:25672
+        networks:
+            - helloworld-network
+        
+
+networks: 
+    helloworld-network:
+        driver: bridge
