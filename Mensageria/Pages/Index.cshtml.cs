@@ -15,21 +15,24 @@ namespace Mensageria.Pages
         private readonly IServiceProvider _services;
         private readonly IConfiguration _configuration;
         private Timer timer;
+        private ConsumingService _consumingService;
         private int SendMessageInterval => _configuration.GetValue<int>("SendMessageInterval");
 
-        public IndexModel(IServiceProvider services, IConfiguration configuration)
+        public IndexModel(IServiceProvider services, IConfiguration configuration, ConsumingService consumingService)
         {
             _services = services;
             _configuration = configuration;
+            _consumingService = consumingService;
         }
 
         public void OnGet()
         {
+            _consumingService.StartAsync(CancellationToken.None);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.timer = timer = new Timer(DoWork, null, TimeSpan.Zero,TimeSpan.FromSeconds(SendMessageInterval));
+            this.timer = timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(SendMessageInterval));
             return Task.CompletedTask;
         }
 
