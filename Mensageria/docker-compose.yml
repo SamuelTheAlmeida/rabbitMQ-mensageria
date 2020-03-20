@@ -3,7 +3,7 @@ version: '3'
 services:
     helloworld:
         container_name: instance1
-        image: msmensageriafcda:1
+        image: mensageria
         build:
             context: .
         restart: always
@@ -18,7 +18,7 @@ services:
 
     helloworld2:
         container_name: instance2
-        image: msmensageriafcda:1
+        image: mensageria
         build:
             context: .
         restart: always
